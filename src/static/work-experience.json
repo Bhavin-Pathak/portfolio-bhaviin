@@ -3,6 +3,7 @@
         "company": "Meril",
         "position": "Software Developer SDE-1",
         "period": "Dec 2024 - Present",
+        "image": "/companies/MERIL.jpg",
         "description": "Worked cross-functionally with AI & product teams to design and ship smart software systems.",
         "technologies": [
             "Node.js",
@@ -23,6 +24,7 @@
         "company": "UB Softec",
         "position": "Mobile Application Developer",
         "period": "Apr 2024 - Oct 2024",
+        "image": "/companies/UB.jpg",
         "description": "Worked as a collaborative junior developer, contributing to mobile app and backend development.",
         "technologies": [
             "Flutter",
@@ -42,6 +44,7 @@
         "company": "RnD Technosoft",
         "position": "iOS App Developer",
         "period": "Jun 2022 - Mar 2024",
+        "image": "/companies/RND.jpg",
         "description": "Developed and published iOS applications on the App Store and Android applications on Play Store.",
         "technologies": [
             "Swift",
@@ -62,6 +65,7 @@
         "company": "Earth Infotech",
         "position": "Computer Technical Specialist",
         "period": "Apr 2020 - May 2022",
+        "image": "/companies/E-I.jpg",
         "description": "Provided computer hardware and technical support services, specializing in custom systems and OS installations.",
         "technologies": [
             "Windows",
