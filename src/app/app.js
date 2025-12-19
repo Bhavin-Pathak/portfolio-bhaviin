@@ -15,6 +15,7 @@ const ContactView = lazy(() => import("../views/ContactView.js"));
 // Animations and Cursor Effect 
 import DigitalWarp from "../components/DigitalWarp.js";
 import SplashCursor from "../components/SplashCursor.js";
+import NeonCursor from "../components/NeonCursor.js";
 import Footer from "../components/Footer.js";
 
 export default function App() {
@@ -41,8 +42,8 @@ export default function App() {
     <div className="min-h-screen text-gray-100 overflow-x-hidden flex flex-col">
       {/* Global Background Layer */}
       <div className="fixed inset-0 bg-black -z-50" />
-      {/* Interactive Splash Cursor */}
-      <SplashCursor />
+      {/* Interactive Cursor Effects */}
+      {showIntro ? <SplashCursor /> : !isLoading && <NeonCursor />}
       {/* Global Background Elements (Static Orbs) */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[10%] left-[10%] w-[40rem] h-[40rem] bg-indigo-600/20 rounded-full blur-[100px] animate-pulse" />
