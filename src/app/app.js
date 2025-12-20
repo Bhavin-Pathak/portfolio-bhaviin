@@ -1,4 +1,4 @@
-import { useState, Suspense, lazy } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
@@ -22,7 +22,17 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [showIntro, setShowIntro] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024 || ('ontouchstart' in window) || navigator.maxTouchPoints > 0);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -42,8 +52,8 @@ export default function App() {
     <div className="min-h-screen text-gray-100 overflow-x-hidden flex flex-col">
       {/* Global Background Layer */}
       <div className="fixed inset-0 bg-black -z-50" />
-      {/* Interactive Cursor Effects */}
-      {showIntro ? <SplashCursor /> : !isLoading && <NeonCursor />}
+      {/* Interactive Cursor Effects - Disabled on Mobile/Tablet for performance */}
+      {!isMobile && (showIntro ? <SplashCursor /> : !isLoading && <NeonCursor />)}
       {/* Global Background Elements (Static Orbs) */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[10%] left-[10%] w-[40rem] h-[40rem] bg-indigo-600/20 rounded-full blur-[100px] animate-pulse" />
