@@ -1,9 +1,9 @@
 {
-    "pageTitle": "Technical Arsenal",
-    "pageSubtitle": "Core competencies and specialized frameworks.",
+    "pageTitle": "The Stack",
+    "pageSubtitle": "Technologies and frameworks I use to build digital solutions.",
     "categories": [
         {
-            "name": "Programming Languages | Frontend | Backend",
+            "name": "Technologies and Frameworks",
             "icon": "Globe",
             "skills": [
                 {
