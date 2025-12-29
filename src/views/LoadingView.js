@@ -1,113 +1,130 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
+import pkg from "../../package.json";
 
-// Terminal text that will be displayed on loading with terminal effect 
-const bootSequence = [
-    "> Initializing...",
-    "> Synchronizing...",
-    "> Establishing connection...",
-    "> Optimizing...",
-    "> Ready..."
+const devLines = [
+    "> Initializing project...",
+    "> npm install",
+    "> Loading assets...",
+    "> Compiling styles...",
+    "> Linking components...",
+    "> Connecting to gh-pages...",
+    "> Starting dev server...",
+    "> Applying dark theme...",
+    "> Finalizing development build...",
+    "> Ready to launch!"
 ];
 
-// Loading View Component
 export default function LoadingView({ onComplete }) {
-    // State
-    const [lines, setLines] = useState([]);
+    const [progress, setProgress] = useState(0);
     const [isExiting, setIsExiting] = useState(false);
-
-    // useEffect to handle typing animation
+    const version = pkg.version;
+    // useEffect for Progress Bar
     useEffect(() => {
-        // Initialize variables
-        let currentLineIndex = 0;
-        let currentCharIndex = 0;
-        let timeoutId;
-        // Array to store timeout IDs
-        const timeouts = [];
-        // Initialize first line
-        setLines([""]);
-        // Type next character function
-        const typeNextChar = () => {
-            if (currentLineIndex >= bootSequence.length) {
-                // All lines typed, trigger exit
-                const exitId = setTimeout(() => {
-                    setIsExiting(true);
-                    const completeId = setTimeout(onComplete, 1000);
-                    timeouts.push(completeId);
-                }, 1000);
-                // Add exit timeout to array
-                timeouts.push(exitId);
-                return;
-            }
-            // Get current line text
-            const currentLineText = bootSequence[currentLineIndex];
-            if (currentCharIndex < currentLineText.length) {
-                // Type next character function
-                setLines(prev => {
-                    const newLines = [...prev];
-                    // Ensure line exists
-                    if (newLines[currentLineIndex] === undefined) newLines[currentLineIndex] = "";
-                    // Update current line
-                    newLines[currentLineIndex] = currentLineText.substring(0, currentCharIndex + 1);
-                    // Return updated lines
-                    return newLines;
-                });
-                // Increment character index
-                currentCharIndex++;
-                // Fixed 75ms typing speed as requested
-                timeoutId = setTimeout(typeNextChar, 75);
-            } else {
-                // Line finished    
-                currentLineIndex++;
-                currentCharIndex = 0;
-                // Prepare next line if available
-                if (currentLineIndex < bootSequence.length) {
-                    setLines(prev => [...prev, ""]);
+        const timer = setInterval(() => {
+            setProgress((prev) => {
+                if (prev >= 100) {
+                    clearInterval(timer);
+                    setTimeout(() => {
+                        setIsExiting(true);
+                        setTimeout(onComplete, 1000);
+                    }, 1200); // Wait 1.2s at 100%
+                    return 100;
                 }
-                // Pause between lines
-                timeoutId = setTimeout(typeNextChar, 300);
-            }
-            // Add timeout to array
-            timeouts.push(timeoutId);
-        };
-        // Start typing
-        timeoutId = setTimeout(typeNextChar, 100);
-        // Add timeout to array
-        timeouts.push(timeoutId);
-        // Cleanup timeouts on unmount
-        return () => { timeouts.forEach(clearTimeout) };
+                return prev + 1;
+            });
+        }, 250);
+        return () => clearInterval(timer);
     }, [onComplete]);
-
+    // Show the final line slightly earlier and wait longer at 100%
+    const lineIndex = Math.min(Math.floor((progress / 100) * devLines.length), devLines.length - 1);
     return (
         <AnimatePresence>
             {!isExiting && (
                 <motion.div
-                    initial={{ opacity: 1 }}
-                    exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, scale: 1.1, filter: "blur(20px)" }}
                     transition={{ duration: 0.8 }}
-                    className="fixed inset-0 bg-[#0a0a0a] text-green-500 font-mono p-4 z-50 overflow-hidden flex items-center justify-center"
+                    className="fixed inset-0 bg-[#050505] z-[100] flex flex-col items-center justify-center overflow-hidden"
                 >
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_2px,3px_100%] pointer-events-none z-10" />
-                    <div className="w-full max-w-2xl relative z-20">
-                        <div className="space-y-2">
-                            {lines.map((line, idx) => (
-                                <div key={idx} className="text-sm md:text-base opacity-90 break-all">
-                                    <span className="text-blue-400 mr-2 font-bold select-none">root@bhavin:~#</span>
-                                    <span className="text-green-400">{line}</span>
-                                    {idx === lines.length - 1 && (
-                                        <motion.span
-                                            animate={{ opacity: [0, 1, 0] }}
-                                            transition={{ duration: 0.8, repeat: Infinity }}
-                                            className="inline-block text-green-400 font-bold ml-1"
-                                        >
-                                            |
-                                        </motion.span>
-                                    )}
-                                </div>
-                            ))}
+                    {/* One-by-One Animated Line Preview (Bottom) */}
+                    <div className="absolute bottom-[15%] inset-x-0 flex justify-center opacity-[0.15] pointer-events-none select-none">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={lineIndex}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.8, ease: "easeInOut" }}
+                                className="font-mono font-bold text-blue-400 uppercase tracking-[0.5em] text-[1.2vw] md:text-[0.8vw] text-center"
+                            >
+                                {devLines[lineIndex]}
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+                    {/* Ambient Glows */}
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        <motion.div
+                            animate={{
+                                scale: [1, 1.2, 1],
+                                opacity: [0.1, 0.15, 0.1]
+                            }}
+                            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                            className="absolute top-0 left-0 w-full h-full bg-blue-600/10 rounded-full blur-[120px]"
+                        />
+                    </div>
+                    <div className="relative z-10 flex flex-col items-center">
+                        {/* Animated Logo/Shape */}
+                        <div className="relative w-28 h-28 md:w-36 md:h-36 mb-12">
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                className="absolute inset-0 border-2 border-t-blue-500 border-r-transparent border-b-purple-500 border-l-transparent rounded-full shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+                            />
+                            <motion.div
+                                animate={{ rotate: -360 }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                className="absolute inset-3 border-2 border-t-transparent border-r-cyan-400 border-b-transparent border-l-cyan-400 rounded-full opacity-60"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <motion.span
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-400 via-cyan-400 to-purple-400 drop-shadow-sm"
+                                >
+                                    {Math.floor(progress)}%
+                                </motion.span>
+                            </div>
+                        </div>
+                        {/* Progress Bar Container */}
+                        <div className="w-64 md:w-96 space-y-5">
+                            <div className="h-[2px] w-full bg-white/5 rounded-full overflow-hidden">
+                                <motion.div
+                                    className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 shadow-[0_0_10px_rgba(34,211,238,0.5)]"
+                                    initial={{ width: "0%" }}
+                                    animate={{ width: `${progress}%` }}
+                                    transition={{ duration: 0.1 }}
+                                />
+                            </div>
+                            <div className="flex justify-between items-center text-[10px] md:text-xs uppercase tracking-[0.25em] text-white/50 font-bold">
+                                <motion.span
+                                    animate={{ opacity: [0.6, 1, 0.6] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                >
+                                    Initializing Portfolio...
+                                </motion.span>
+                                <span className="text-blue-400/80">v{version}</span>
+                            </div>
                         </div>
                     </div>
+                    {/* Scanning Line Effect - Lighter & More Subtle */}
+                    <motion.div
+                        animate={{ y: ["0%", "100%", "0%"] }}
+                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-blue-400/5 to-transparent pointer-events-none"
+                    />
                 </motion.div>
             )}
         </AnimatePresence>
