@@ -2,7 +2,7 @@
   "name": "portfolio_bhavin",
   "version": "1.1.0",
   "private": true,
-  "homepage": "https://bhavin-pathak.github.io",
+  "homepage": "https://bhaviinpathak.online",
   "dependencies": {
     "@react-three/fiber": "^9.4.2",
     "framer-motion": "^12.23.12",
