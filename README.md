@@ -3,7 +3,7 @@
 This is my personal portfolio website built with React, showcasing my skills, projects, and experience. It is designed to be responsive and user-friendly, providing a comprehensive overview of my professional journey.
 
 ## 🚀 Live
-Visit the live site here: [https://bhaviinpathak.online](https://bhaviinpathak.online)
+Visit the live site here: <a href="https://bhaviinpathak.online" target="_blank">bhaviinpathak.online</a>
 
 ## 🛠️ Tech Stack
 This project leverages modern web technologies:
