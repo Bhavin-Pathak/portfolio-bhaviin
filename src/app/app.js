@@ -26,6 +26,18 @@ export default function App() {
   const location = useLocation();
 
   useEffect(() => {
+    const titles = {
+      "/": "Bhavin Pathak | Full Stack Developer & Tech Consultant",
+      "/about": "About | Bhavin Pathak",
+      "/skills": "The Stack | Bhavin Pathak",
+      "/experience": "Experience | Bhavin Pathak",
+      "/projects": "Works | Bhavin Pathak",
+      "/contact": "Connect | Bhavin Pathak",
+    };
+    document.title = titles[location.pathname] || "Bhavin Pathak | Portfolio";
+  }, [location.pathname]);
+
+  useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024 || ('ontouchstart' in window) || navigator.maxTouchPoints > 0);
     };
