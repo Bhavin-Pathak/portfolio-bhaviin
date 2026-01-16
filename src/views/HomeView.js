@@ -19,9 +19,9 @@ export default function HomeView() {
         <div className="flex-grow h-full flex items-center justify-center p-4">
             {/* Desktop: Max width increased for horizontal layout Mobile: Standard width */}
             <LiquidContainer className="w-full md:max-w-6xl p-6 md:p-12">
-                <h2 className="text-2xl md:text-5xl font-bold text-center mb-8 md:mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                <h1 className="text-2xl md:text-5xl font-bold text-center mb-8 md:mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
                     {homeData.homeTitle}
-                </h2>
+                </h1>
                 {/* Mobile: Vertical Stack (flex-col) Desktop: Horizontal Row (md:flex-row) */}
                 <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-stretch">
                     {menuItems.map((item, index) => (
