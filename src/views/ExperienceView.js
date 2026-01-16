@@ -3,8 +3,11 @@ import experienceData from "../static/work-experience.json";
 import { LiquidContainer } from "../components/LiquidContainer.js";
 import Header from "../components/Header.js";
 import { pageVariants } from "../utils/animations.js";
+import { getTotalExperience } from "../utils/experience-calculate.js";
 
 export default function ExperienceView() {
+    const expText = getTotalExperience();
+
     return (
         <motion.div
             variants={pageVariants}
@@ -13,7 +16,7 @@ export default function ExperienceView() {
             exit="exit"
             className="min-h-screen bg-transparent overflow-x-hidden flex flex-col"
         >
-            <Header title={experienceData.pageTitle} subtitle={experienceData.pageSubtitle} />
+            <Header title={experienceData.pageTitle} subtitle={`${expText} • ${experienceData.pageSubtitle}`} />
             <div className="max-w-5xl mx-auto px-4 md:px-8 pt-28 md:pt-36 pb-12 w-full flex-grow flex flex-col justify-center">
                 <div className="space-y-8">
                     {experienceData.jobs.map((job, idx) => (
