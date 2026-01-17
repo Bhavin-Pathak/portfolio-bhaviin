@@ -70,5 +70,8 @@
   },
   "bugs": {
     "url": "https://github.com/Bhavin-Pathak/bhavin-pathak.github.io/issues"
+  },
+  "overrides": {
+    "ajv": "^8.8.2"
   }
 }
