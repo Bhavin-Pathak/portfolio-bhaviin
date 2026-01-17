@@ -15,8 +15,9 @@ async function generateBlog() {
     }
 
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    // Switch to gemini-1.5-flash which is generally more available on the stable v1 endpoint
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Explicitly set the model and version if needed, but usually the SDK handles it.
+    // However, for 1.5-flash, the v1 endpoint is often better.
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }, { apiVersion: "v1" });
     const seoConfig = JSON.parse(fs.readFileSync(SEO_CONFIG_PATH, 'utf8'));
 
     const prompt = `
