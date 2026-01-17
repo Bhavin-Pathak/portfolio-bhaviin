@@ -72,8 +72,8 @@
     "url": "https://github.com/Bhavin-Pathak/bhavin-pathak.github.io/issues"
   },
   "overrides": {
-    "ajv": "6.12.6",
-    "ajv-keywords": "3.5.2",
-    "ajv-formats": "1.6.1"
+    "ajv": "8.12.0",
+    "ajv-keywords": "5.1.0",
+    "ajv-formats": "2.1.1"
   }
 }
