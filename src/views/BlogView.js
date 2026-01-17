@@ -11,10 +11,7 @@ export default function BlogView() {
     const navigate = useNavigate();
 
     // We reverse the array here for display so newest appears first
-    const blogData = {
-        ...blogDataRaw,
-        posts: [...blogDataRaw.posts].reverse()
-    };
+    const blogData = blogDataRaw;
 
     return (
         <motion.div
