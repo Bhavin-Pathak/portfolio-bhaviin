@@ -1,80 +1,86 @@
 /* eslint-disable no-undef */
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios'); // We'll use axios to fetch news
+const axios = require('axios');
 
-// --- CONFIGURATION ---
 const BLOG_DATA_PATH = path.join(process.cwd(), 'src', 'static', 'blog-posts.json');
 const SEO_CONFIG_PATH = path.join(process.cwd(), 'src', 'static', 'seo-config.json');
 
-async function generateBlogWithoutKey() {
+async function generateHumanLikeBlog() {
     try {
-        console.log('🌐 Fetching latest technical news from the web...');
-
-        // Fetching from Hacker News RSS (No Key Required)
-        const response = await axios.get('https://hnrss.org/frontpage?points=50');
+        console.log('🌐 Fetching global technical signals...');
+        const response = await axios.get('https://hnrss.org/frontpage?points=30');
         const seoConfig = JSON.parse(fs.readFileSync(SEO_CONFIG_PATH, 'utf8'));
 
-        // Simple XML parsing logic with safety checks
-        const rawItems = response.data.match(/<item>([\s\S]*?)<\/item>/g) || [];
-        const items = rawItems.slice(0, 5);
+        // Pick 2 random keywords for natural injection
+        const allKeywords = seoConfig.defaultKeywords.split(',');
+        const randomKeywords = allKeywords.sort(() => 0.5 - Math.random()).slice(0, 2).map(k => k.trim());
 
-        if (items.length === 0) {
-            console.log('⚠️ No news items found in the RSS feed.');
-            return;
-        }
+        // Parse 3 top news items
+        const rawItems = response.data.match(/<item>([\s\S]*?)<\/item>/g) || [];
+        const news = rawItems.slice(0, 3).map(item => {
+            return {
+                title: item.match(/<title>([\s\S]*?)<\/title>/)[1].replace('<![CDATA[', '').replace(']]>', '').trim(),
+                link: item.match(/<link>([\s\S]*?)<\/link>/)[1].trim()
+            };
+        });
+
+        if (news.length < 3) return;
+
+        const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+        const monthYear = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+
+        const blogTitle = `The State of Distributed Engineering: ${monthYear} Insights`;
+        const blogId = `engineering-insights-${Date.now()}`;
+
+        // REAL BLOG TEMPLATE (Narrative Style)
+        const blogContent = `
+### The Evolution of Modern Architectures
+
+In my journey as a **${randomKeywords[0]}**, I have always believed that the most resilient systems aren't just built on code, but on a deep understanding of current industry shifts. As we navigate through 2026, the boundary between local development and global cloud orchestration is blurring faster than ever.
+
+Recent developments in the ecosystem—specifically regarding **${news[0].title}**—highlight a critical pivot towards more localized, performance-centric logic. From a technical standpoint, this isn't just a minor update; it is a fundamental change in how we think about data integrity and latency.
+
+### Breaking Down the Global Narrative
+
+We are seeing a massive surge in interest around decentralized intelligence. For instance, the progress made in **${news[1].title}** ([source](${news[1].link})) demonstrates that the industry is finally moving away from bloated monolithic structures in favor of leaner, highly specialized services. At Meril Life Sciences, we've often discussed how these shifts can fundamentally transform healthcare data management—ensuring that the tech stack is as responsive as the medical professionals using it.
+
+Furthermore, updates like **${news[2].title}** are setting new benchmarks for developer velocity. As a **${randomKeywords[1]}**, my focus remains on how these tools can be integrated into existing PostgreSQL and Node.js pipelines without compromising on security or scalability.
+
+### Final Thoughts: Looking Ahead
+
+The next phase of engineering isn't about adoption; it's about optimization. Whether you are operating out of Vapi's tech hubs or building global enterprise solutions, the core mission remains: delivering premium, end-to-end experiences that stand the test of high-concurrency workloads. 
+
+We must continue to audit these technical shifts not just as observers, but as architects of the next-generation web.
+
+*This technical thought piece was automatically compiled to ensure my portfolio remains at the intersection of theory and real-world engineering metrics.*`;
+
+        const newPost = {
+            "id": blogId,
+            "title": blogTitle,
+            "excerpt": `Bhavin Pathak provides a deep-dive analysis into ${news[0].title} and the evolving landscape of modern software architectures in 2026.`,
+            "date": dateStr,
+            "category": "Engineering",
+            "author": "Bhavin Pathak",
+            "readTime": "8 min read",
+            "content": blogContent,
+            "tags": ["Technical Architecture", "Engineering Insight", "2026 Trends"]
+        };
 
         const blogData = JSON.parse(fs.readFileSync(BLOG_DATA_PATH, 'utf8'));
 
-        let newsList = items.map(item => {
-            const titleMatch = item.match(/<title>([\s\S]*?)<\/title>/);
-            const linkMatch = item.match(/<link>([\s\S]*?)<\/link>/);
-
-            if (!titleMatch || !linkMatch) return null;
-
-            const title = titleMatch[1].replace('<![CDATA[', '').replace(']]>', '').trim();
-            const link = linkMatch[1].trim();
-            return `<li><strong>${title}</strong>: Examining how this technical shift impacts modern software engineering. <a href="${link}" target="_blank" rel="noopener noreferrer">Source</a></li>`;
-        }).filter(Boolean).join('\n');
-
-        if (!newsList) {
-            console.log('⚠️ Failed to parse any valid news items.');
-            return;
+        // Prevent duplicates
+        if (!blogData.posts.some(p => p.title === blogTitle)) {
+            blogData.posts.unshift(newPost);
+            fs.writeFileSync(BLOG_DATA_PATH, JSON.stringify(blogData, null, 4));
+            console.log(`✅ Success! Real-style Blog Generated: ${blogTitle}`);
+        } else {
+            console.log('⏭️ Blog already updated for this month.');
         }
-
-        const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
-        const title = `Engineering Digest: Technical Evolution in ${new Date().toLocaleString('default', { month: 'long' })} 2026`;
-
-        // Check if this title already exists to avoid duplicate blogs on retry
-        if (blogData.posts.some(p => p.title === title)) {
-            console.log('⏭️ Blog with this title already exists. Skipping...');
-            return;
-        }
-
-        const id = `tech-roundup-${Date.now()}`;
-
-        // Create a Professional SEO-Optimized Template
-        const newPost = {
-            "id": id,
-            "title": title,
-            "excerpt": `Bhavin Pathak analyzes critical shifts in the global engineering ecosystem, focusing on AI, cloud scalability, and modern web architectures.`,
-            "date": dateStr,
-            "category": "Tech Roundup",
-            "author": "Bhavin Pathak",
-            "readTime": "6 min read",
-            "content": `### The 2026 Engineering Landscape\n\nIn the ever-evolving world of software development, staying ahead of trends in ${seoConfig.defaultKeywords} is the hallmark of a professional architect. This digest breaks down some of the most impactful updates from the global community.\n\n### Key Technical Highlights\n\n<ul>\n${newsList}\n</ul>\n\n### Architectural Insight\n\nFrom my perspective as an SDE-1 focusing on high-performance systems, these updates signal a move toward more decentralized AI processing. Whether we are discussing Node.js event-loop optimizations or PostgreSQL partitioning strategies, the goal remains the same: building resilient, player-centric (or user-centric) systems.\n\nContinuing these technical deep-dives allows us to refine our internal practices at Meril and beyond, ensuring our stack remains state-of-the-art.\n\n*This technical audit was automatically compiled to keep the community and stakeholders informed on latest metrics.*`,
-            "tags": ["Automation", "Engineering", "Latest Tech"]
-        };
-
-        // Add to the top of the list
-        blogData.posts.unshift(newPost);
-
-        fs.writeFileSync(BLOG_DATA_PATH, JSON.stringify(blogData, null, 4));
-        console.log(`✅ Success! No-Key Blog Generated: ${newPost.title}`);
 
     } catch (error) {
-        console.error('❌ Error in No-Key Generator:', error.message);
+        console.error('❌ Error in Human-Like Generator:', error.message);
     }
 }
 
-generateBlogWithoutKey();
+generateHumanLikeBlog();
