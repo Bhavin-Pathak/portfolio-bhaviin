@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { LiquidContainer } from "../components/LiquidContainer.js";
-import { User, Code, Briefcase, Cpu, Mail } from "lucide-react";
+import { User, Code, Briefcase, Cpu, Mail, Newspaper } from "lucide-react";
 import homeData from "../static/initial-home.json";
 
 export default function HomeView() {
@@ -13,6 +13,7 @@ export default function HomeView() {
         { label: "The Stack", path: "/skills", icon: Cpu, color: "from-purple-500 to-pink-500" },
         { label: "Experience", path: "/experience", icon: Briefcase, color: "from-orange-500 to-red-500" },
         { label: "Works", path: "/projects", icon: Code, color: "from-green-500 to-emerald-500" },
+        { label: "Insights", path: "/blog", icon: Newspaper, color: "from-yellow-500 to-orange-500" },
         { label: "Connect", path: "/contact", icon: Mail, color: "from-gray-500 to-slate-500" },
     ];
     return (
