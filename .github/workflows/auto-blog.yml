@@ -36,7 +36,12 @@ jobs:
           git config --global user.name "Bhavin-Bot"
           git config --global user.email "bot@bhaviinpathak.online"
           git add src/static/blog-posts.json public/sitemap.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto-Blog: Updated latest tech insights [skip ci]" && git push origin main)
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "🤖 Auto-Blog: Updated latest tech insights [skip ci]"
+            git push origin main
+          else
+            echo "No changes to commit"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

@@ -15,6 +15,7 @@ async function generateBlog() {
     }
 
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    // Switch to gemini-1.5-flash which is generally more available on the stable v1 endpoint
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const seoConfig = JSON.parse(fs.readFileSync(SEO_CONFIG_PATH, 'utf8'));
 
@@ -44,10 +45,13 @@ async function generateBlog() {
         const response = await result.response;
         let text = response.text();
 
-        // Clean JSON in case AI adds markdown blocks
+        // Clean JSON in case AI adds markdown blocks or extra characters
         text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        // Remove any leading/trailing non-JSON characters just in case
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) throw new Error("AI did not return valid JSON");
 
-        const newPost = JSON.parse(text);
+        const newPost = JSON.parse(jsonMatch[0]);
 
         // Update JSON file
         const blogData = JSON.parse(fs.readFileSync(BLOG_DATA_PATH, 'utf8'));
