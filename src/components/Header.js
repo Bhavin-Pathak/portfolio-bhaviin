@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { BackButton } from "./BackButton.js";
 import PropTypes from "prop-types";
 
-export default function Header({ title, subtitle, backTo }) {
+export default function Header({ title, subtitle, backTo, tag: Tag = "h1" }) {
     // state to track if the user has scrolled
     const [isScrolled, setIsScrolled] = useState(false);
     // useEffect to update the state when the user scrolls
@@ -29,9 +29,9 @@ export default function Header({ title, subtitle, backTo }) {
                     transition={{ duration: 0.6, ease: "backOut", delay: 0.2 }}
                     className="text-center pt-1 px-4 max-w-[85%] flex flex-col items-center justify-center gap-0.5"
                 >
-                    <h2 className="text-sm md:text-xl font-black text-white tracking-tight leading-tight line-clamp-1">
+                    <Tag className="text-sm md:text-xl font-black text-white tracking-tight leading-tight line-clamp-1">
                         {title}
-                    </h2>
+                    </Tag>
                     {subtitle && (
                         <p className="text-[7px] md:text-[10px] text-blue-400 font-black uppercase tracking-[0.2em] opacity-80 truncate w-full">
                             {subtitle}
@@ -46,6 +46,7 @@ export default function Header({ title, subtitle, backTo }) {
 
 Header.propTypes = {
     title: PropTypes.string.isRequired,
-    subtitle: PropTypes.string.isRequired,
+    subtitle: PropTypes.string,
     backTo: PropTypes.string,
+    tag: PropTypes.string,
 };
