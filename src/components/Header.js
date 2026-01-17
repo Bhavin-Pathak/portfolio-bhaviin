@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { BackButton } from "./BackButton.js";
 import PropTypes from "prop-types";
 
-export default function Header({ title, subtitle }) {
+export default function Header({ title, subtitle, backTo }) {
     // state to track if the user has scrolled
     const [isScrolled, setIsScrolled] = useState(false);
     // useEffect to update the state when the user scrolls
@@ -20,21 +20,23 @@ export default function Header({ title, subtitle }) {
             <div className="w-full h-16 flex items-center justify-center relative px-4 md:px-8">
                 {/* Back Button */}
                 <div className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-50">
-                    <BackButton />
+                    <BackButton to={backTo} />
                 </div>
                 {/* Title & Subtitle */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.5, y: -20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: "backOut", delay: 0.2 }}
-                    className="text-center pt-1"
+                    className="text-center pt-1 px-4 max-w-[85%] flex flex-col items-center justify-center gap-0.5"
                 >
-                    <h2 className="text-xl md:text-3xl font-bold text-white tracking-tight whitespace-nowrap">
+                    <h2 className="text-sm md:text-xl font-black text-white tracking-tight leading-tight line-clamp-1">
                         {title}
                     </h2>
-                    <p className="text-[10px] md:text-sm text-gray-400 mt-0.5 opacity-100">
-                        {subtitle}
-                    </p>
+                    {subtitle && (
+                        <p className="text-[7px] md:text-[10px] text-blue-400 font-black uppercase tracking-[0.2em] opacity-80 truncate w-full">
+                            {subtitle}
+                        </p>
+                    )}
                 </motion.div>
             </div>
         </div>
@@ -45,4 +47,5 @@ export default function Header({ title, subtitle }) {
 Header.propTypes = {
     title: PropTypes.string.isRequired,
     subtitle: PropTypes.string.isRequired,
+    backTo: PropTypes.string,
 };
