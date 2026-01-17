@@ -9,7 +9,8 @@ const SEO = ({ title, description, keywords, image, url, type = "website" }) => 
         defaultDescription,
         defaultKeywords,
         siteUrl,
-        defaultImage
+        defaultImage,
+        twitterHandle
     } = seoConfig;
 
     const seoTitle = title ? `${title} | Bhavin Pathak` : siteTitle;
@@ -35,6 +36,8 @@ const SEO = ({ title, description, keywords, image, url, type = "website" }) => 
 
             {/* Twitter */}
             <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:site" content={twitterHandle} />
+            <meta name="twitter:creator" content={twitterHandle} />
             <meta name="twitter:title" content={seoTitle} />
             <meta name="twitter:description" content={seoDescription} />
             <meta name="twitter:image" content={seoImage} />
