@@ -21,7 +21,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies 🔧
-        run: npm install @google/generative-ai --legacy-peer-deps --no-save
+        run: npm install axios --legacy-peer-deps --no-save
 
       - name: Run AI Blogger 🤖
         run: node scripts/auto-blog.js
