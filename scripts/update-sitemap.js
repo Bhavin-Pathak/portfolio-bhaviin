@@ -4,7 +4,7 @@ const path = require('path');
 
 // Paths - Use process.cwd() to ensure it works from the project root
 const rootDir = process.cwd();
-const blogDataPath = path.join(rootDir, 'public', 'data', 'blog-posts.json');
+const blogDataPath = path.join(rootDir, 'src', 'static', 'blog-posts.json');
 const sitemapPath = path.join(rootDir, 'public', 'sitemap.xml');
 const baseUrl = 'https://bhaviinpathak.online';
 
