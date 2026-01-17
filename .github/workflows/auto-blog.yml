@@ -1,0 +1,56 @@
+name: Auto SEO Blog Update
+
+on:
+  schedule:
+    - cron: '0 0 1,15 * *' # Runs at 00:00 on the 1st and 15th of every month
+  workflow_dispatch: # Allows manual trigger for testing
+
+jobs:
+  write-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies 🔧
+        run: npm install @google/generative-ai --legacy-peer-deps
+
+      - name: Run AI Blogger 🤖
+        run: node scripts/auto-blog.js
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Update Sitemap 🗺️
+        run: node scripts/update-sitemap.js
+
+      - name: Commit and Push Update 📝
+        run: |
+          git config --global user.name "Bhavin-Bot"
+          git config --global user.email "bot@bhaviinpathak.online"
+          git add src/static/blog-posts.json public/sitemap.xml
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Auto-Blog: Updated latest tech insights [skip ci]" && git push origin main)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy to Live Site 🚀
+        run: |
+          npm install --legacy-peer-deps
+          npm run build
+          cp build/index.html build/404.html
+        env:
+          CI: false
+          DISABLE_ESLINT_PLUGIN: true
+
+      - name: Push to gh-pages 📤
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build
+          branch: gh-pages
