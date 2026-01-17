@@ -1,56 +1,76 @@
-# Bhavin Pathak - Personal Portfolio
+# 🌟 Bhavin Pathak Portfolio
 
-This is my personal portfolio website built with React, showcasing my skills, projects, and experience. It is designed to be responsive and user-friendly, providing a comprehensive overview of my professional journey.
+A modern, high-performance, and fully SEO-optimized personal portfolio showcasing my professional journey, technical skills, and projects.
 
-## 🚀 Live
-Visit the live site here: <a href="https://bhaviinpathak.online" target="_blank">bhaviinpathak.online</a>
-
-## 🛠️ Tech Stack
-This project leverages modern web technologies:
-- **Core:** React 19
-- **Animations:** Framer Motion
-- **3D Graphics:** React Three Fiber (Three.js)
-- **Styling:** Tailwind CSS, PostCSS
-- **Icons:** Lucide React
-- **Deployment:** GitHub Pages
-
-## 📦 Getting Started
-
-To get a local copy up and running, follow these steps:
-
-### Prerequisites
-- Node.js (v18 or higher recommended)
-- npm
-
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Bhavin-Pathak/bhavin-pathak.github.io.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd bhavin-pathak.github.io
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-### Running Locally
-To start the development server:
-```bash
-npm start
-```
-The application will be available at `http://localhost:3000`.
-
-### Building for Production
-To create an optimized production build:
-```bash
-npm run build
-```
-
-## 📜 License
-This project is licensed under a **Proprietary License**. All rights are reserved by Bhavin Pathak. See the [LICENSE](LICENSE) file for more details.
+🔗 **Live Site**: [bhaviinpathak.online](https://bhaviinpathak.online)
 
 ---
-© 2025 Bhavin Pathak
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React (Latest Version)
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **3D Elements**: Three.js & @react-three/fiber
+- **Icons**: Lucide React
+- **SEO**: React Helmet Async
+- **Automation**: GitHub Actions (CI/CD)
+
+---
+
+## 🚀 Key Features
+
+- **SEO Dominance**: Dynamic meta tags for every page and article.
+- **Auto-Sitemap**: Automated script that keeps `sitemap.xml` updated.
+- **Auto-Deployment**: Seamless CI/CD workflow from GitHub to custom domain.
+- **Glassmorphic UI**: Premium dark aesthetic with liquid interactive elements.
+- **Mobile First**: Fully responsive design for all screen sizes.
+
+---
+
+## 🏁 How to Run Locally
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Bhavin-Pathak/portfolio-bhaviin.git
+   ```
+2. **Install dependencies**
+   ```bash
+   npm install --legacy-peer-deps
+   ```
+3. **Start the application**
+   ```bash
+   npm start
+   ```
+
+---
+
+## 🤖 Workflow & Maintenance
+
+- **Adding Blogs**: Add entries to `src/static/blog-posts.json`.
+- **Updating Keywords**: Edit `src/static/seo-config.json`.
+- **Automatic Sync**: GitHub Actions automatically updates the sitemap and commits it back to the `main` branch before deploying.
+
+---
+
+## 🛑 Contribution Policy
+
+This is a personal portfolio project. Contributions, redistribution, or commercial use of this code is **not allowed**. The source code is provided for demonstration and skill verification purposes only.
+
+## 📄 License
+
+This project is under a **Proprietary License**. All rights are reserved by **Bhaviiin**.
+- ❌ No copying or redistribution of any part of this Work.
+- ❌ No reverse engineering or commercial use.
+- ✅ Personal viewing / Skill demonstration only.
+
+---
+
+## 🤝 Connect with Me
+
+- **Email**: [bhavinpathak29@gmail.com](mailto:bhavinpathak29@gmail.com)
+- **LinkedIn**: [Bhavin Pathak](https://linkedin.com/in/bhavin-pathak)
+- **GitHub**: [@Bhavin-Pathak](https://github.com/Bhavin-Pathak)
+
+---
+*Copyright © 2026 Bhaviin. All Rights Reserved.*
