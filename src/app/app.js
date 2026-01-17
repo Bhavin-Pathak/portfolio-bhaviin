@@ -13,6 +13,7 @@ const ProjectsView = lazy(() => import("../views/ProjectsView.js"));
 const ContactView = lazy(() => import("../views/ContactView.js"));
 const BlogView = lazy(() => import("../views/BlogView.js"));
 const BlogDetailView = lazy(() => import("../views/BlogDetailView.js"));
+const NotFoundView = lazy(() => import("../views/NotFoundView.js"));
 
 // Animations and Cursor Effect 
 import DigitalWarp from "../components/DigitalWarp.js";
@@ -26,19 +27,6 @@ export default function App() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
-
-  useEffect(() => {
-    const titles = {
-      "/": "Bhavin Pathak | Full Stack Developer & Tech Consultant",
-      "/about": "About | Bhavin Pathak",
-      "/skills": "The Stack | Bhavin Pathak",
-      "/experience": "Experience | Bhavin Pathak",
-      "/projects": "Works | Bhavin Pathak",
-      "/contact": "Connect | Bhavin Pathak",
-      "/blog": "Insights | Bhavin Pathak",
-    };
-    document.title = titles[location.pathname] || "Bhavin Pathak | Portfolio";
-  }, [location.pathname]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -93,6 +81,7 @@ export default function App() {
                 <Route path="/contact" element={<ContactView />} />
                 <Route path="/blog" element={<BlogView />} />
                 <Route path="/blog/:id" element={<BlogDetailView />} />
+                <Route path="*" element={<NotFoundView />} />
               </Routes>
               <Footer />
             </div>
