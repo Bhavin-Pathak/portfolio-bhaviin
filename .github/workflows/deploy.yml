@@ -21,6 +21,8 @@ jobs:
           npm install --legacy-peer-deps
           npm run sitemap
           npm run build
+        env:
+          CI: false
 
       - name: Commit and Push Sitemap Update 📝
         run: |
