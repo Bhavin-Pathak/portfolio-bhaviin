@@ -26,12 +26,13 @@ jobs:
           CI: false
           DISABLE_ESLINT_PLUGIN: true
 
-      - name: Commit and Push Sitemap Update 📝
+      - name: Commit and Push 📝
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/sitemap.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update sitemap [skip ci]" && git push origin main)
+          git pull origin main --rebase
+          git add public/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update [skip ci]" && git push origin main)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

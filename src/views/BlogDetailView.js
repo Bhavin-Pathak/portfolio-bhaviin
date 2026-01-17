@@ -3,8 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { LiquidContainer } from "../components/LiquidContainer.js";
 import Header from "../components/Header.js";
-import blogData from "../static/blog-posts.json";
-import { Tag, Quote, Share2 } from "lucide-react";
+import { Tag, Quote, Share2, Loader2 } from "lucide-react";
 import { pageVariants } from "../utils/animations.js";
 import SEO from "../components/SEO.js";
 
@@ -12,15 +11,33 @@ export default function BlogDetailView() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [post, setPost] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const foundPost = blogData.posts.find(p => p.id === id);
-        if (!foundPost) {
-            navigate("/blog", { replace: true });
-        } else {
-            setPost(foundPost);
-        }
+        fetch(`/data/blog-posts.json?t=${new Date().getTime()}`)
+            .then(res => res.json())
+            .then(data => {
+                const foundPost = data.posts.find(p => p.id === id);
+                if (!foundPost) {
+                    navigate("/blog", { replace: true });
+                } else {
+                    setPost(foundPost);
+                }
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Error loading blog detail:", err);
+                setLoading(false);
+            });
     }, [id, navigate]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+            </div>
+        );
+    }
 
     if (!post) return null;
 

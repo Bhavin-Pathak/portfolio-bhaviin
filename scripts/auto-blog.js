@@ -3,18 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-const BLOG_DATA_PATH = path.join(process.cwd(), 'src', 'static', 'blog-posts.json');
-const SEO_CONFIG_PATH = path.join(process.cwd(), 'src', 'static', 'seo-config.json');
+const BLOG_DATA_PATH = path.join(process.cwd(), 'public', 'data', 'blog-posts.json');
 
 async function generateHumanLikeBlog() {
     try {
         console.log('🌐 Fetching global technical signals...');
         const response = await axios.get('https://hnrss.org/frontpage?points=30');
-        const seoConfig = JSON.parse(fs.readFileSync(SEO_CONFIG_PATH, 'utf8'));
-
-        // Pick 2 random keywords for natural injection
-        const allKeywords = seoConfig.defaultKeywords.split(',');
-        const randomKeywords = allKeywords.sort(() => 0.5 - Math.random()).slice(0, 2).map(k => k.trim());
 
         // Parse 3 top news items
         const rawItems = response.data.match(/<item>([\s\S]*?)<\/item>/g) || [];
@@ -33,35 +27,31 @@ async function generateHumanLikeBlog() {
         const blogTitle = `The State of Distributed Engineering: ${monthYear} Insights`;
         const blogId = `engineering-insights-${Date.now()}`;
 
-        // REAL BLOG TEMPLATE (Narrative Style)
+        // REAL BLOG TEMPLATE (Narrative Style - Neutral and Professional)
         const blogContent = `
-### The Evolution of Modern Architectures
+### Current Trends in Scalable Systems
 
-In my journey as a **${randomKeywords[0]}**, I have always believed that the most resilient systems aren't just built on code, but on a deep understanding of current industry shifts. As we navigate through 2026, the boundary between local development and global cloud orchestration is blurring faster than ever.
+Modern software engineering is witnessing a significant pivot towards performance-centric architectures. As we navigate through the complexities of distributed computing in 2026, the boundary between local development and global cloud orchestration is blurring. Recent developments—specifically regarding **${news[0].title}**—highlight this shift. From a technical standpoint, this isn't just a minor update; it is a fundamental change in how we think about data integrity and response latency.
 
-Recent developments in the ecosystem—specifically regarding **${news[0].title}**—highlight a critical pivot towards more localized, performance-centric logic. From a technical standpoint, this isn't just a minor update; it is a fundamental change in how we think about data integrity and latency.
+### Technical Deep Dive
 
-### Breaking Down the Global Narrative
+We are seeing a massive surge in interest around decentralized intelligence. For instance, the progress made in **${news[1].title}** ([source](${news[1].link})) demonstrates that the industry is moving away from bloated monolithic structures in favor of leaner, highly specialized services. These shifts can fundamentally transform large-scale data management—ensuring that the tech stack is as responsive as the real-time requirements of the system.
 
-We are seeing a massive surge in interest around decentralized intelligence. For instance, the progress made in **${news[1].title}** ([source](${news[1].link})) demonstrates that the industry is finally moving away from bloated monolithic structures in favor of leaner, highly specialized services. At Meril Life Sciences, we've often discussed how these shifts can fundamentally transform healthcare data management—ensuring that the tech stack is as responsive as the medical professionals using it.
+Furthermore, updates like **${news[2].title}** are setting new benchmarks for developer velocity. The focus for modern engineering remains on how these tools can be integrated into existing PostgreSQL and Node.js pipelines without compromising on security or scalability.
 
-Furthermore, updates like **${news[2].title}** are setting new benchmarks for developer velocity. As a **${randomKeywords[1]}**, my focus remains on how these tools can be integrated into existing PostgreSQL and Node.js pipelines without compromising on security or scalability.
+### Strategic Conclusion
 
-### Final Thoughts: Looking Ahead
+The next phase of engineering isn't about adoption; it's about optimization. Whether you are operating out of local tech hubs or building global enterprise solutions, the core mission remains: delivering premium, end-to-end experiences that stand the test of high-concurrency workloads. We must continue to audit these technical shifts not just as observers, but as architects of the next-generation web.
 
-The next phase of engineering isn't about adoption; it's about optimization. Whether you are operating out of Vapi's tech hubs or building global enterprise solutions, the core mission remains: delivering premium, end-to-end experiences that stand the test of high-concurrency workloads. 
-
-We must continue to audit these technical shifts not just as observers, but as architects of the next-generation web.
-
-*This technical thought piece was automatically compiled to ensure my portfolio remains at the intersection of theory and real-world engineering metrics.*`;
+*This technical thought piece was automatically compiled to ensure the platform remains aligned with real-world engineering metrics.*`;
 
         const newPost = {
             "id": blogId,
             "title": blogTitle,
-            "excerpt": `Bhavin Pathak provides a deep-dive analysis into ${news[0].title} and the evolving landscape of modern software architectures in 2026.`,
+            "excerpt": `Technical analysis into ${news[0].title} and the evolving landscape of modern software architectures in 2026.`,
             "date": dateStr,
             "category": "Engineering",
-            "author": "Bhavin Pathak",
+            "author": "Engineering Team",
             "readTime": "8 min read",
             "content": blogContent,
             "tags": ["Technical Architecture", "Engineering Insight", "2026 Trends"]
@@ -71,7 +61,8 @@ We must continue to audit these technical shifts not just as observers, but as a
 
         // Prevent duplicates
         if (!blogData.posts.some(p => p.title === blogTitle)) {
-            blogData.posts.unshift(newPost);
+            // Push to the end as requested
+            blogData.posts.push(newPost);
             fs.writeFileSync(BLOG_DATA_PATH, JSON.stringify(blogData, null, 4));
             console.log(`✅ Success! Real-style Blog Generated: ${blogTitle}`);
         } else {

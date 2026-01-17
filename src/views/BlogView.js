@@ -1,14 +1,46 @@
 import { motion } from "framer-motion";
 import { LiquidContainer } from "../components/LiquidContainer.js";
 import Header from "../components/Header.js";
-import blogData from "../static/blog-posts.json";
-import { BookOpen, ExternalLink } from "lucide-react";
+import { BookOpen, ExternalLink, Loader2 } from "lucide-react";
 import { pageVariants } from "../utils/animations.js";
 import { useNavigate } from "react-router-dom";
 import SEO from "../components/SEO.js";
+import { useEffect, useState } from "react";
 
 export default function BlogView() {
     const navigate = useNavigate();
+    const [blogData, setBlogData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Fetch fresh blog data with cache-busting
+        fetch(`/data/blog-posts.json?t=${new Date().getTime()}`)
+            .then(res => res.json())
+            .then(data => {
+                // Since we now push new blogs to the end of the array,
+                // we reverse it for display so newest appears first.
+                const displayData = {
+                    ...data,
+                    posts: [...data.posts].reverse()
+                };
+                setBlogData(displayData);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Error loading blogs:", err);
+                setLoading(false);
+            });
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+            </div>
+        );
+    }
+
+    if (!blogData) return null;
 
     return (
         <motion.div
