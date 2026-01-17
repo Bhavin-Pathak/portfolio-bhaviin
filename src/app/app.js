@@ -11,6 +11,8 @@ const SkillsView = lazy(() => import("../views/SkillsView.js"));
 const ExperienceView = lazy(() => import("../views/ExperienceView.js"));
 const ProjectsView = lazy(() => import("../views/ProjectsView.js"));
 const ContactView = lazy(() => import("../views/ContactView.js"));
+const BlogView = lazy(() => import("../views/BlogView.js"));
+const BlogDetailView = lazy(() => import("../views/BlogDetailView.js"));
 
 // Animations and Cursor Effect 
 import DigitalWarp from "../components/DigitalWarp.js";
@@ -33,6 +35,7 @@ export default function App() {
       "/experience": "Experience | Bhavin Pathak",
       "/projects": "Works | Bhavin Pathak",
       "/contact": "Connect | Bhavin Pathak",
+      "/blog": "Insights | Bhavin Pathak",
     };
     document.title = titles[location.pathname] || "Bhavin Pathak | Portfolio";
   }, [location.pathname]);
@@ -80,18 +83,22 @@ export default function App() {
           <DigitalWarp key="warp" onComplete={handleWarpComplete} />
         ) : (
           <Suspense fallback={<div className="min-h-screen bg-black" />}>
-            <Routes location={location} key={location.pathname}>
-              <Route path="/" element={<HomeView />} />
-              <Route path="/about" element={<AboutView />} />
-              <Route path="/skills" element={<SkillsView />} />
-              <Route path="/experience" element={<ExperienceView />} />
-              <Route path="/projects" element={<ProjectsView />} />
-              <Route path="/contact" element={<ContactView />} />
-            </Routes>
+            <div className="flex-grow flex flex-col min-h-screen">
+              <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<HomeView />} />
+                <Route path="/about" element={<AboutView />} />
+                <Route path="/skills" element={<SkillsView />} />
+                <Route path="/experience" element={<ExperienceView />} />
+                <Route path="/projects" element={<ProjectsView />} />
+                <Route path="/contact" element={<ContactView />} />
+                <Route path="/blog" element={<BlogView />} />
+                <Route path="/blog/:id" element={<BlogDetailView />} />
+              </Routes>
+              <Footer />
+            </div>
           </Suspense>
         )}
       </AnimatePresence>
-      <Footer />
     </div>
   );
 }
