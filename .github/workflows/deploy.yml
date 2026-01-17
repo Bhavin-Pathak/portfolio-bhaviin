@@ -19,7 +19,17 @@ jobs:
       - name: Install and Build 🔧
         run: |
           npm install
+          npm run sitemap
           npm run build
+
+      - name: Commit and Push Sitemap Update 📝
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/sitemap.xml
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update sitemap [skip ci]" && git push origin main)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
