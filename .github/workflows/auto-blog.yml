@@ -2,8 +2,8 @@ name: Auto SEO Blog Update
 
 on:
   schedule:
-    - cron: '0 0 1,15 * *' # Runs at 00:00 on the 1st and 15th of every month
-  workflow_dispatch: # Allows manual trigger for testing
+    - cron: '0 0 1,15 * *' # Every 15 days
+  workflow_dispatch: 
 
 jobs:
   write-and-deploy:
@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for proper merging/pulling
 
       - name: Setup Node.js ⚙️
         uses: actions/setup-node@v4
@@ -35,12 +37,17 @@ jobs:
         run: |
           git config --global user.name "Bhavin-Bot"
           git config --global user.email "bot@bhaviinpathak.online"
+          
+          # Pull latest changes from main to avoid conflicts
+          git pull origin main --rebase
+          
           git add src/static/blog-posts.json public/sitemap.xml
+          
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "🤖 Auto-Blog: Updated latest tech insights [skip ci]"
             git push origin main
           else
-            echo "No changes to commit"
+            echo "No new blog content discovered this time."
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

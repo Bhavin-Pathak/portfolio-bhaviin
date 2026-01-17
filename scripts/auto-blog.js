@@ -15,33 +15,58 @@ async function generateBlogWithoutKey() {
         const response = await axios.get('https://hnrss.org/frontpage?points=50');
         const seoConfig = JSON.parse(fs.readFileSync(SEO_CONFIG_PATH, 'utf8'));
 
-        // Simple XML parsing logic to get titles and descriptions
-        const items = response.data.match(/<item>([\s\S]*?)<\/item>/g).slice(0, 5);
+        // Simple XML parsing logic with safety checks
+        const rawItems = response.data.match(/<item>([\s\S]*?)<\/item>/g) || [];
+        const items = rawItems.slice(0, 5);
+
+        if (items.length === 0) {
+            console.log('⚠️ No news items found in the RSS feed.');
+            return;
+        }
+
+        const blogData = JSON.parse(fs.readFileSync(BLOG_DATA_PATH, 'utf8'));
 
         let newsList = items.map(item => {
-            const title = item.match(/<title>([\s\S]*?)<\/title>/)[1].replace('<![CDATA[', '').replace(']]>', '');
-            const link = item.match(/<link>([\s\S]*?)<\/link>/)[1];
-            return `<li><strong>${title}</strong>: Exploring the implications of this update on scalable architectures. <a href="${link}">Read source</a></li>`;
-        }).join('\n');
+            const titleMatch = item.match(/<title>([\s\S]*?)<\/title>/);
+            const linkMatch = item.match(/<link>([\s\S]*?)<\/link>/);
+
+            if (!titleMatch || !linkMatch) return null;
+
+            const title = titleMatch[1].replace('<![CDATA[', '').replace(']]>', '').trim();
+            const link = linkMatch[1].trim();
+            return `<li><strong>${title}</strong>: Examining how this technical shift impacts modern software engineering. <a href="${link}" target="_blank" rel="noopener noreferrer">Source</a></li>`;
+        }).filter(Boolean).join('\n');
+
+        if (!newsList) {
+            console.log('⚠️ Failed to parse any valid news items.');
+            return;
+        }
 
         const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+        const title = `Engineering Digest: Technical Evolution in ${new Date().toLocaleString('default', { month: 'long' })} 2026`;
+
+        // Check if this title already exists to avoid duplicate blogs on retry
+        if (blogData.posts.some(p => p.title === title)) {
+            console.log('⏭️ Blog with this title already exists. Skipping...');
+            return;
+        }
+
         const id = `tech-roundup-${Date.now()}`;
 
         // Create a Professional SEO-Optimized Template
         const newPost = {
             "id": id,
-            "title": `Engineering Digest: Latest Innovations in ${new Date().toLocaleString('default', { month: 'long' })} 2026`,
-            "excerpt": `Bhavin Pathak analyzes the latest technical shifts in the global engineering ecosystem, focusing on AI and scalable systems.`,
+            "title": title,
+            "excerpt": `Bhavin Pathak analyzes critical shifts in the global engineering ecosystem, focusing on AI, cloud scalability, and modern web architectures.`,
             "date": dateStr,
             "category": "Tech Roundup",
             "author": "Bhavin Pathak",
             "readTime": "6 min read",
-            "content": `### The 2026 Technical Landscape\n\nAs a professional developer focused on ${seoConfig.defaultKeywords}, staying updated with the rapid pulse of the industry is non-negotiable. This week, we are witnessing a significant shift in how distributed systems handle high-concurrency workloads. \n\n### Top Global Tech Highlights\n\n<ul>\n${newsList}\n</ul>\n\n### Bhavin's Engineering Perspective\n\nFrom a software architect's viewpoint, these developments underline a critical trend: the convergence of AI logic with edge computing. Whether it is optimized PostgreSQL queries or React-based micro-frontends, the goal remains the same—delivering premium performance.\n\nAt Meril Life Sciences and beyond, I have observed that the most successful projects are those that embrace these technical shifts early. Integrating these updates into our workflow ensures that we remain at the forefront of the industry.\n\n*This audit was automatically compiled to ensure the community stays informed on the latest engineering benchmarks.*`,
+            "content": `### The 2026 Engineering Landscape\n\nIn the ever-evolving world of software development, staying ahead of trends in ${seoConfig.defaultKeywords} is the hallmark of a professional architect. This digest breaks down some of the most impactful updates from the global community.\n\n### Key Technical Highlights\n\n<ul>\n${newsList}\n</ul>\n\n### Architectural Insight\n\nFrom my perspective as an SDE-1 focusing on high-performance systems, these updates signal a move toward more decentralized AI processing. Whether we are discussing Node.js event-loop optimizations or PostgreSQL partitioning strategies, the goal remains the same: building resilient, player-centric (or user-centric) systems.\n\nContinuing these technical deep-dives allows us to refine our internal practices at Meril and beyond, ensuring our stack remains state-of-the-art.\n\n*This technical audit was automatically compiled to keep the community and stakeholders informed on latest metrics.*`,
             "tags": ["Automation", "Engineering", "Latest Tech"]
         };
 
-        // Update JSON file
-        const blogData = JSON.parse(fs.readFileSync(BLOG_DATA_PATH, 'utf8'));
+        // Add to the top of the list
         blogData.posts.unshift(newPost);
 
         fs.writeFileSync(BLOG_DATA_PATH, JSON.stringify(blogData, null, 4));
