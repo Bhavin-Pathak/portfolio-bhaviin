@@ -6,6 +6,7 @@ import Header from "../components/Header.js";
 import blogData from "../static/blog-posts.json";
 import { Tag, Quote, Share2 } from "lucide-react";
 import { pageVariants } from "../utils/animations.js";
+import SEO from "../components/SEO.js";
 
 export default function BlogDetailView() {
     const { id } = useParams();
@@ -18,7 +19,6 @@ export default function BlogDetailView() {
             navigate("/blog", { replace: true });
         } else {
             setPost(foundPost);
-            document.title = `${foundPost.title} | Bhavin Pathak`;
         }
     }, [id, navigate]);
 
@@ -32,11 +32,18 @@ export default function BlogDetailView() {
             exit="exit"
             className="min-h-screen bg-transparent overflow-x-hidden flex flex-col"
         >
+            <SEO
+                title={post.title}
+                description={post.excerpt}
+                url={`/blog/${post.id}`}
+                type="article"
+            />
             {/* Global Header with Post Metadata */}
             <Header
                 title={post.title}
                 subtitle={`${post.date} • ${post.readTime} • ${post.author}`}
                 backTo="/blog"
+                tag="h2"
             />
 
             <div className="max-w-4xl mx-auto px-4 md:px-8 pt-24 md:pt-32 pb-20 w-full flex-grow">

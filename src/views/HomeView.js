@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { LiquidContainer } from "../components/LiquidContainer.js";
 import { User, Code, Briefcase, Cpu, Mail, Newspaper } from "lucide-react";
 import homeData from "../static/initial-home.json";
+import SEO from "../components/SEO.js";
 
 export default function HomeView() {
     // Navigation hook
@@ -18,6 +19,11 @@ export default function HomeView() {
     ];
     return (
         <div className="flex-grow h-full flex items-center justify-center p-4">
+            <SEO
+                title="Bhavin Pathak | Best Full Stack Developer & Tech Consultant"
+                description="Bhavin Pathak: Expert Full Stack Developer & Software Architect. Specialized in building scalable web applications and custom software solutions."
+                url="/"
+            />
             {/* Desktop: Max width increased for horizontal layout Mobile: Standard width */}
             <LiquidContainer className="w-full md:max-w-6xl p-6 md:p-12">
                 <h1 className="text-2xl md:text-5xl font-bold text-center mb-8 md:mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
