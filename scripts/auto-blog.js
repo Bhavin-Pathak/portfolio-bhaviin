@@ -15,9 +15,30 @@ async function generateBlog() {
     }
 
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    // Explicitly set the model and version if needed, but usually the SDK handles it.
-    // However, for 1.5-flash, the v1 endpoint is often better.
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }, { apiVersion: "v1" });
+
+    // Multi-Model Fallback strategy for better reliability
+    const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-pro"];
+    let model;
+    let success = false;
+
+    for (const modelName of modelsToTry) {
+        try {
+            console.log(`📡 Attempting to use model: ${modelName}...`);
+            model = genAI.getGenerativeModel({ model: modelName });
+            // Test if the model exists with a very small prompt
+            await model.generateContent("test");
+            success = true;
+            console.log(`✅ Using model: ${modelName}`);
+            break;
+        } catch (e) {
+            console.warn(`⚠️ Model ${modelName} failed or not found. Trying next...`);
+        }
+    }
+
+    if (!success) {
+        throw new Error("❌ All AI models failed. Please check your API key permissions.");
+    }
+
     const seoConfig = JSON.parse(fs.readFileSync(SEO_CONFIG_PATH, 'utf8'));
 
     const prompt = `
