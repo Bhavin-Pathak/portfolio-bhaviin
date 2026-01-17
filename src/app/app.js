@@ -22,24 +22,36 @@ import FollowCursor from "../components/FollowCursor.js";
 import Footer from "../components/Footer.js";
 
 export default function App() {
+  const location = useLocation();
+  const isRoot = location.pathname === "/";
+
+  // If not root, skip the intro sequence for a better UX on direct links/404s
   const [isLoading, setIsLoading] = useState(true);
   const [showIntro, setShowIntro] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const location = useLocation();
 
   useEffect(() => {
+    // If we land on a subpage directly, we skip the splash/intro
+    if (!isRoot) {
+      setIsLoading(false);
+      setShowIntro(false);
+      setIsTransitioning(false);
+    }
+
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024 || ('ontouchstart' in window) || navigator.maxTouchPoints > 0);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  }, [isRoot]);
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
-    setShowIntro(true);
+    if (isRoot) {
+      setShowIntro(true);
+    }
   };
 
   const handleIntroComplete = () => {
