@@ -21,6 +21,7 @@ jobs:
           npm install --legacy-peer-deps
           npm run sitemap
           npm run build
+          cp build/index.html build/404.html
         env:
           CI: false
           DISABLE_ESLINT_PLUGIN: true
