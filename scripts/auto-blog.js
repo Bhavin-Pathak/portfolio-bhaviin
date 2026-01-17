@@ -30,7 +30,7 @@ async function generateBlog() {
         "id": "url-friendly-slug",
         "title": "SEO Optimized Catchy Title",
         "excerpt": "A deep 150-character summary for meta tags",
-        "date": "${new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: '2026' })}",
+        "date": "${new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}",
         "category": "Technology",
         "author": "Bhavin Pathak",
         "readTime": "7 min read",
